@@ -1,6 +1,6 @@
 # dcm-to-video
 
-- [中文](https://github.com/kevin20888802/dcm-to-video) | [English](https://github.com/kevin20888802/dcm-to-video/README_en.md)
+- [中文](https://github.com/kevin20888802/dcm-to-video) | [English](https://github.com/kevin20888802/dcm-to-video/blob/main/README_en.md)
 
 這個程式可以將 DICOM 檔案轉換成影片。它主要使用 Node.js 和一些外部工具來實現。程式會依照 UID 排序 DICOM 檔案，將其轉換成編號過的圖片，然後將這些圖片組合成一個影片檔案。
 
