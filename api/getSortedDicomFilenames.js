@@ -77,3 +77,6 @@ module.exports.getSortedDicomFilenames = async function (folderPath, recursive) 
   const sortedData = await sortAndExtractUIDs(dicomFiles);
   return sortedData;
 };
+
+// 輸入包含dicom檔案的陣列，輸出一個依照UID排序過後的列表Object
+module.exports.sortAndExtractUIDs = sortAndExtractUIDs;

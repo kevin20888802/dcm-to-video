@@ -1,6 +1,7 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const dicomParser = require('dicom-parser');
 
 // 引用 getSortedDicomFilenames 函數
 const { getSortedDicomFilenames } = require('./getSortedDicomFilenames');
@@ -11,14 +12,26 @@ const { getSortedDicomFilenames } = require('./getSortedDicomFilenames');
  * @param {string} filePath DICOM 檔案的完整路徑
  * @param {number} index 索引編號
  */
-function convertDicomToPng(outputPath, filePath, index) {
-    const outputFileName = `image_${index}.png`;
-    const outputPathFull = path.join(outputPath, outputFileName);
+function convertDicomToPng(outputPath, filePath, imageIndex) {
 
-    // 使用 dcm2jpg.jar 將 DICOM 轉換為 PNG
-    execSync(`java -jar dcm2jpg.jar "${filePath}" "${outputPathFull}"`);
+    const dicomData = fs.readFileSync(filePath);
+    const byteArray = new Uint8Array(dicomData.buffer);
 
-    console.log(`已將 ${filePath} 轉換為 ${outputPathFull}`);
+    const dataSet = dicomParser.parseDicom(byteArray);
+    
+    // 獲取 Number Of Frames
+    const numberOfFrames = dataSet.intString('x00280008');
+
+    // 使用 dcm2jpg.jar 將每個 frame 轉換為 PNG
+    for (let frameIndex = 1; frameIndex <= numberOfFrames; frameIndex++) {
+        const outputFileName = `${imageIndex.index}.jpg`;
+        const outputFilePath = path.join(outputPath, outputFileName);
+
+        execSync(`java -jar dcm2jpg.jar --frame ${frameIndex} "${filePath}" "${outputFilePath}"`);
+
+        console.log(`已將 ${filePath} 的 frame ${frameIndex} 轉換為 ${outputFilePath}`);
+        imageIndex.index++;
+    }
 }
 
 /**
@@ -42,12 +55,13 @@ async function dicomToImages(outputPath, folderPath, recursive) {
     }
 
     // 依序處理每個 DICOM 檔案並編號命名
+    var imageIndex = { index:1};
     for (let i = 0; i < dicomFilePaths.length; i++) {
         const filePath = dicomFilePaths[i].filePath;
-        convertDicomToPng(outputPath, filePath, i + 1);
+        convertDicomToPng(outputPath, filePath, imageIndex);
     }
 
-    console.log('所有 DICOM 檔案已轉換完成。');
+    console.log('所有 DICOM 檔案已轉換成圖片。');
 }
 
 // 導出 dicomToImages 函數
