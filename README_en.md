@@ -1,6 +1,6 @@
 # dcm-to-video
 
-- [中文](https://github.com/kevin20888802/dcm-to-video) | [English](https://github.com/kevin20888802/dcm-to-video/README_en.md)
+- [中文](https://github.com/kevin20888802/dcm-to-video) | [English](https://github.com/kevin20888802/dcm-to-video/blob/main/README_en.md)
 
 This program can convert DICOM files into videos. It primarily utilizes Node.js and some external tools for implementation. The program sorts DICOM files based on UID, converts them into sequentially numbered image files, and then compiles these images into a video file.
 
